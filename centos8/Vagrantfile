@@ -1,30 +1,12 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 Vagrant.configure("2") do |config|
+
+	# setup for all nodes
 	config.vm.box = "centos/8"
 	config.vm.provider :libvirt do |libvirt|
 		libvirt.cpus = 4
 		libvirt.memory = 2048
-	end
-
-	config.vm.define "dbd" do |dbd|
-	end
-	config.vm.define "ctld" do |ctld|
-	end
-	config.vm.define "ctld-backup" do |ctldbak|
-	end
-
-	nodecnt = ENV['NODES'] || 1
-	(1..nodecnt).each do |i|
-		config.vm.define "node#{i - 1}" do |node|
-			config.vm.provider :libvirt do |node|
-				node.cpus = 4
-				node.numa_nodes = [
-					{:cpus => "0-1", :memory => "2048"},
-					{:cpus => "2-3", :memory => "2048"},
-				]
-			end
-		end
 	end
 
 	config.vm.provision "shell", inline: <<-SHELL
@@ -72,4 +54,25 @@ Vagrant.configure("2") do |config|
 		systemctl enable munge
 		systemctl restart munge
 	SHELL
+
+	# node definitions
+	config.vm.define "dbd" do |dbd|
+	end
+	config.vm.define "ctld" do |ctld|
+	end
+	config.vm.define "ctld-backup" do |ctldbak|
+	end
+
+	nodecnt = ENV['NODES'] || 1
+	(1..nodecnt).each do |i|
+		config.vm.define "node#{i - 1}" do |node|
+			config.vm.provider :libvirt do |node|
+				node.cpus = 4
+				node.numa_nodes = [
+					{:cpus => "0-1", :memory => "2048"},
+					{:cpus => "2-3", :memory => "2048"},
+				]
+			end
+		end
+	end
 end
