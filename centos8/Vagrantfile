@@ -56,18 +56,22 @@ Vagrant.configure("2") do |config|
 
 	# node definitions
 	config.vm.define "dbd" do |dbd|
+		dbd.vm.hostname = "dbd"
 		dbd.vm.provision "shell", inline: <<-SHELL
 			yum -y install mariadb-server
 		SHELL
 	end
 	config.vm.define "ctld" do |ctld|
+		ctld.vm.hostname = "ctld"
 	end
 	config.vm.define "ctld-backup" do |ctldbak|
+		ctldbak.vm.hostname = "ctld-backup"
 	end
 
 	nodecnt = ENV['NODES'] || 1
 	(1..nodecnt).each do |i|
 		config.vm.define "node#{i - 1}" do |node|
+			node.vm.hostname = "node#{i - 1}"
 			config.vm.provider :libvirt do |node|
 				node.cpus = 4
 				node.numa_nodes = [
