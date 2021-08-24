@@ -58,6 +58,8 @@ Vagrant.configure("2") do |config|
 		echo -e "192.168.255.12\tctld-backup" >>/etc/hosts
 		groupadd --gid 500 slurm
 		useradd --uid 500 --gid 500 --shell /sbin/nologin slurm
+		mkdir /var/log/slurm /var/spool/slurm
+		chown slurm:slurm /var/log/slurm /var/spool/slurm
 	SHELL
 
 	# node definitions
