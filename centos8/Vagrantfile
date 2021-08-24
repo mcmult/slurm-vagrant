@@ -1,0 +1,75 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+Vagrant.configure("2") do |config|
+	config.vm.box = "centos/8"
+	config.vm.provider :libvirt do |libvirt|
+		libvirt.cpus = 4
+		libvirt.memory = 2048
+	end
+
+	config.vm.define "dbd" do |dbd|
+	end
+	config.vm.define "ctld" do |ctld|
+	end
+	config.vm.define "ctld-backup" do |ctldbak|
+	end
+
+	nodecnt = ENV['NODES'] || 1
+	(1..nodecnt).each do |i|
+		config.vm.define "node#{i - 1}" do |node|
+			config.vm.provider :libvirt do |node|
+				node.cpus = 4
+				node.numa_nodes = [
+					{:cpus => "0-1", :memory => "2048"},
+					{:cpus => "2-3", :memory => "2048"},
+				]
+			end
+		end
+	end
+
+	config.vm.provision "shell", inline: <<-SHELL
+		yum -y install dnf-plugins-core epel-release
+		yum config-manager --set-enabled powertools
+		yum -y install epel-release \
+			expect \
+			hdf5-devel \
+			http-parser-devel \
+			hwloc-devel \
+			json-c-devel \
+			libcurl-devel \
+			libjwt-devel \
+			libevent-devel \
+			libibmad-devel \
+			libibumad-devel \
+			libssh2-devel \
+			libyaml-devel \
+			lua-devel \
+			lz4-devel \
+			man \
+			man2html \
+			mariadb \
+			mariadb-devel \
+			munge \
+			munge-devel \
+			ncurses-devel \
+			numactl-devel \
+			openssl-devel \
+			pam-devel \
+			perl-ExtUtils-MakeMaker \
+			perl-ExtUtils-ParseXS \
+			pmix-devel \
+			python3 \
+			readline-devel \
+			rrdtool-devel \
+			vim \
+			which \
+			git
+		echo "thisismysecretmungekeythatis32bytes" > /etc/munge/munge.key
+		chown munge:munge /etc/munge/munge.key
+		chmod 0400 /etc/munge/munge.key
+		systemctl disable httpd
+		systemctl stop httpd
+		systemctl enable munge
+		systemctl restart munge
+	SHELL
+end
