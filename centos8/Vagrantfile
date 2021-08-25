@@ -50,8 +50,8 @@ Vagrant.configure("2") do |config|
 		echo "thisismysecretmungekeythatis32bytes" > /etc/munge/munge.key
 		chown munge:munge /etc/munge/munge.key
 		chmod 0400 /etc/munge/munge.key
-		systemctl disable httpd
-		systemctl stop httpd
+		systemctl disable httpd firewalld
+		systemctl stop httpd firewalld
 		systemctl enable munge
 		systemctl restart munge
 		echo -e "192.168.255.10\tdbd" >>/etc/hosts
