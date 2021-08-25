@@ -57,10 +57,11 @@ Vagrant.configure("2") do |config|
 		echo -e "192.168.255.10\tdbd" >>/etc/hosts
 		echo -e "192.168.255.11\tctld" >>/etc/hosts
 		echo -e "192.168.255.12\tctld-backup" >>/etc/hosts
+		echo -e "f\t/run/slurm\t0755\tslurm\tslurm\t-\t-" > /etc/tmpfiles.d/slurm.conf
 		groupadd --gid 500 slurm
 		useradd --uid 500 --gid 500 --shell /sbin/nologin slurm
-		mkdir /var/log/slurm /var/spool/slurm
-		chown slurm:slurm /var/log/slurm /var/spool/slurm
+		mkdir /var/log/slurm /var/spool/slurm /run/slurm
+		chown slurm:slurm /var/log/slurm /var/spool/slurm /run/slurm
 	SHELL
 
 	# node definitions
