@@ -1,0 +1,87 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+Vagrant.configure("2") do |config|
+	# OS
+	config.vm.box = "debian/bullseye64"
+
+	# Configure hardware
+	config.vm.provider :libvirt do |libvirt|
+		libvirt.cpus = 8
+		libvirt.memory = 16384
+		# Specify numa nodes for the VM
+		libvirt.numa_nodes = [
+			{:cpus => "0-3", :memory => "8192"},
+			{:cpus => "4-5", :memory => "1024"},
+			{:cpus => "6-7", :memory => "3072"}
+		]
+	end
+
+	# Pull over some useful files
+	config.vm.provision "file", source: "~/.gitconfig", destination: ".gitconfig"
+	config.vm.provision "file", source: "~/.vimrc", destination: ".vimrc"
+	#config.vm.provision "file", source: "~/.emacs", destination: ".emacs"
+
+	# Node definitions
+	config.vm.define "debian" do |slurm|
+		slurm.vm.hostname = "debian"
+	end
+
+	# Disable NFS sync at start
+	config.vm.synced_folder '.', '/vagrant', disabled: true
+
+	# Postinstall process
+	config.vm.provision "shell" do |shell|
+		shell.reboot = true
+		shell.inline =
+			"sed -i 's/GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"systemd.unified_cgroup_hierarchy=0 swapaccount=1 /' /etc/default/grub
+			update-grub2
+			apt-get update
+			apt-get dist-upgrade -y
+			apt-get install -y autoconf \
+				build-essential \
+				expect \
+				git \
+				hdf5-tools \
+				htop \
+				iputils-ping \
+				net-tools \
+				libcurl4-gnutls-dev \
+				libevent-dev \
+				libgtk2.0-dev \
+				libhdf5-dev \
+				libhwloc-dev \
+				libibmad-dev \
+				libibumad-dev \
+				libipmi* \
+				libfreeipmi* \
+				libjson-c-dev \
+				liblua5.3-dev \
+				libmunge-dev \
+				libncurses-dev \
+				libpam0g-dev \
+				librrd-dev \
+				libssl-dev \
+				liblz4-dev \
+				man2html \
+				munge \
+				nfs-common \
+				numactl \
+				openssh-server \
+				python3 \
+				vim \
+				default-mysql-client \
+				default-libmysqlclient-dev \
+				libjwt-dev \
+				libhttp-parser-dev
+			echo thisismysecretmungekeythatis32bytes > /etc/munge/munge.key
+			chown munge:munge /etc/munge/munge.key
+			chmod 0400 /etc/munge/munge.key
+			systemctl disable apache2
+			systemctl enable munge
+			groupadd --gid 500 slurm
+			useradd --uid 500 --gid 500 --shell /sbin/nologin slurm
+			mkdir /var/log/slurm /var/spool/slurm /run/slurm
+			chown slurm:slurm /var/log/slurm /var/spool/slurm /run/slurm"
+	end
+
+end
