@@ -74,7 +74,7 @@ Vagrant.configure("2") do |config|
 			:libvirt__forward_mode => 'none'
 		dbd.vm.provision "shell", inline: <<-SHELL
 			yum -y install mariadb-server
-			echo -e "[mysqld]\ninnodb_buffer_pool_size=1024M\ninnodb_log_file_size=64M\ninnodb_lock_wait_timeout=900" > /etc/my.cnf.d/slurm.cnf
+			echo -e "[mysqld]\ninnodb_buffer_pool_size=1024M\ninnodb_log_file_size=256M\ninnodb_lock_wait_timeout=900" > /etc/my.cnf.d/slurm.cnf
 			systemctl enable mariadb
 			systemctl start mariadb
 			mysql -e "create user slurm"
