@@ -11,12 +11,17 @@ Vagrant.configure("2") do |config|
 		# manually the sum of memory for each numa node will override
 		# this.
 		libvirt.memory = 16384
-		# Specify numa nodes for the VM
+		# Specify numa nodes for the VM.
 		libvirt.numa_nodes = [
 			{:cpus => "0-3", :memory => "8192"},
-			{:cpus => "4-5", :memory => "1024"},
-			{:cpus => "6-7", :memory => "3072"}
+			{:cpus => "4-7", :memory => "8192"}
 		]
+		# These do not have to be identical to eachother. EG:
+		#libvirt.numa_nodes = [
+		#	{:cpus => "0-3", :memory => "8192"},
+		#	{:cpus => "4-5", :memory => "4096"},
+		#	{:cpus => "6-7", :memory => "4096"}
+		#]
 	end
 
 	# Pull over some useful files
