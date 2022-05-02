@@ -5,8 +5,10 @@
 ### Get the latest vagrant
 
 curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+
 echo "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main
 #deb-src [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/vagrant.list
+
 sudo apt-get update && apt-get install vagrant
 
 ### Install libvirt/qemu
