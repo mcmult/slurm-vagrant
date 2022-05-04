@@ -25,3 +25,7 @@ vagrant plugin install vagrant-libvirt
 
 usermod -a -G libvirt $USER
 
+## Useful Links
+
+https://github.com/hashicorp/vagrant
+https://github.com/vagrant-libvirt/vagrant-libvirt
