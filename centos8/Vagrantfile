@@ -90,6 +90,7 @@ Vagrant.configure("2") do |config|
 			libibumad-devel \
 			libssh2-devel \
 			libyaml-devel \
+			dbus-devel \
 			lua-devel \
 			lz4-devel \
 			man \
