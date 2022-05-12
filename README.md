@@ -21,7 +21,42 @@
 
 ### Add yourself to the libvirt group
 
-    usermod -a -G libvirt $USER
+    sudo usermod -a -G libvirt $USER
+
+For this to take full effect, you may need to log out and back in.  You can
+veryfy that you are in the group with:
+
+    groups
+
+## Basic usage
+
+After entering a directory with a 'Vagrantfile' you can run a number of commands
+to interact with the vm.  Most of these will also accept a "hostname" as an
+argument so if you have multiple machines defined you can pick which one to
+perform an action on.
+
+### Starting a VM/Group of VMs
+
+    vagrant up
+
+When run from a directory with a VagrantFile will start a vm if it is down, and
+prepare/build the vm if it is the first time running it.
+
+### Stopping VM(s)
+
+   vagrant halt
+
+Stops a running vm.
+
+   vagrant destroy
+
+Shuts down and then destroys the vms.
+
+### Accessing a VM
+
+   vagrant ssh
+
+Will ssh to the vm if it is up.
 
 ## Useful Links
 
