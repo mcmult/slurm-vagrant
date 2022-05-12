@@ -44,17 +44,17 @@ prepare/build the vm if it is the first time running it.
 
 ### Stopping VM(s)
 
-   vagrant halt
+    vagrant halt
 
 Stops a running vm.
 
-   vagrant destroy
+    vagrant destroy
 
 Shuts down and then destroys the vms.
 
 ### Accessing a VM
 
-   vagrant ssh
+    vagrant ssh
 
 Will ssh to the vm if it is up.
 
