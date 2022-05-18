@@ -53,6 +53,7 @@ Vagrant.configure("2") do |config|
 				git \
 				hdf5-tools \
 				htop \
+				hwloc \
 				iputils-ping \
 				net-tools \
 				libcurl4-gnutls-dev \
