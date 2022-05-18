@@ -58,6 +58,13 @@ Shuts down and then destroys the vms.
 
 Will ssh to the vm if it is up.
 
+### Copying files into/out of the VM
+
+The easiest way to move files around (witout NFS) is to scp them in.  A plugin
+"vagrant-scp" can be helpfull for this.  It can be installed with:
+
+    vagrant plugin install vagrant-scp
+
 ## Useful Links
 
 https://github.com/hashicorp/vagrant
