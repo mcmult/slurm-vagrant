@@ -55,24 +55,27 @@ Vagrant.configure("2") do |config|
 				htop \
 				iputils-ping \
 				net-tools \
-				libdbus-1-dev \
 				libcurl4-gnutls-dev \
+				libdbus-1-dev \
 				libevent-dev \
 				libgtk2.0-dev \
 				libhdf5-dev \
+				libhttp-parser-dev \
 				libhwloc-dev \
 				libibmad-dev \
 				libibumad-dev \
 				libipmi* \
 				libfreeipmi* \
 				libjson-c-dev \
+				libjwt-dev \
 				liblua5.3-dev \
+				liblz4-dev \
 				libmunge-dev \
 				libncurses-dev \
 				libpam0g-dev \
 				librrd-dev \
 				libssl-dev \
-				liblz4-dev \
+				libyaml-dev \
 				man2html \
 				munge \
 				nfs-common \
@@ -81,9 +84,7 @@ Vagrant.configure("2") do |config|
 				python3 \
 				vim \
 				default-mysql-client \
-				default-libmysqlclient-dev \
-				libjwt-dev \
-				libhttp-parser-dev
+				default-libmysqlclient-dev
 			echo thisismysecretmungekeythatis32bytes > /etc/munge/munge.key
 			chown munge:munge /etc/munge/munge.key
 			chmod 0400 /etc/munge/munge.key
