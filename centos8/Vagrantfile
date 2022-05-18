@@ -1,11 +1,11 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 Vagrant.configure("2") do |config|
-	# setup for all nodes
 	config.vm.box = "generic/centos8"
+	# Default hardware setup
 	config.vm.provider :libvirt do |libvirt|
 		libvirt.cpus = 4
-		libvirt.memory = 2048
+		libvirt.memory = 4096
 	end
 
 	# Pull over some useful files
@@ -24,10 +24,6 @@ Vagrant.configure("2") do |config|
 			:libvirt__netmask => '255.255.255.0',
 			:libvirt__network_name => 'clusternet',
 			:libvirt__forward_mode => 'none'
-		config.vm.provider :libvirt do |node|
-			node.cpus = 4
-			node.memory = 4096
-		end
 		dbd.vm.provision "shell", inline: <<-SHELL
 			yum -y install mariadb-server
 			echo -e "[mysqld]\ninnodb_buffer_pool_size=1024M\ninnodb_log_file_size=256M\ninnodb_lock_wait_timeout=900" > /etc/my.cnf.d/slurm.cnf
@@ -46,14 +42,6 @@ Vagrant.configure("2") do |config|
 			:libvirt__network_name => 'clusternet',
 			:libvirt__forward_mode => 'none'
 	end
-	config.vm.define "ctld-backup" do |ctldbak|
-		ctldbak.vm.hostname = "ctld-backup"
-		ctldbak.vm.network :private_network,
-			:ip => '192.168.255.12',
-			:libvirt__netmask => '255.255.255.0',
-			:libvirt__network_name => 'clusternet',
-			:libvirt__forward_mode => 'none'
-	end
 
 	nodecnt = (ENV.fetch('SLURMD_NODE_CNT') { "1" }).to_i()
 	(1..nodecnt).each do |i|
@@ -64,6 +52,7 @@ Vagrant.configure("2") do |config|
 				:libvirt__netmask => '255.255.255.0',
 				:libvirt__network_name => 'clusternet',
 				:libvirt__forward_mode => 'none'
+			# cluster nodes get 2 numa nodes
 			config.vm.provider :libvirt do |node|
 				node.cpus = 4
 				node.numa_nodes = [
