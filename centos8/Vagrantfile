@@ -63,59 +63,61 @@ Vagrant.configure("2") do |config|
 		end
 	end
 
-	config.vm.provision "shell", inline: <<-SHELL
-		yum -y install dnf-plugins-core epel-release
-		yum config-manager --set-enabled powertools
-		yum -y install dbus-devel \
-			expect \
-			git \
-			hdf5-devel \
-			http-parser-devel \
-			hwloc \
-			hwloc-devel \
-			infiniband-diags-devel \
-			json-c-devel \
-			libcurl-devel \
-			libjwt-devel \
-			libevent-devel \
-			libibumad-devel \
-			libssh2-devel \
-			libyaml-devel \
-			lua-devel \
-			lz4-devel \
-			man \
-			man2html \
-			mariadb \
-			mariadb-devel \
-			munge \
-			munge-devel \
-			ncurses-devel \
-			numactl-devel \
-			openssl-devel \
-			pam-devel \
-			perf \
-			perl-ExtUtils-MakeMaker \
-			perl-ExtUtils-ParseXS \
-			pmix-devel \
-			python3 \
-			readline-devel \
-			rrdtool-devel \
-			vim \
-			which
-		echo "thisismysecretmungekeythatis32bytes" > /etc/munge/munge.key
-		chown munge:munge /etc/munge/munge.key
-		chmod 0400 /etc/munge/munge.key
-		systemctl disable httpd firewalld
-		systemctl stop httpd firewalld
-		systemctl enable munge
-		systemctl restart munge
-		echo -e "192.168.255.10\tdbd" >>/etc/hosts
-		echo -e "192.168.255.11\tctld" >>/etc/hosts
-		echo -e "192.168.255.12\tctld-backup" >>/etc/hosts
-		echo -e "f\t/run/slurm\t0755\tslurm\tslurm\t-\t-" > /etc/tmpfiles.d/slurm.conf
-		groupadd --gid 500 slurm
-		useradd --uid 500 --gid 500 --shell /sbin/nologin slurm
-		mkdir /var/log/slurm /var/spool/slurm /run/slurm
-		chown slurm:slurm /var/log/slurm /var/spool/slurm /run/slurm
-	SHELL
+	config.vm.provision "shell" do |shell|
+		shell.reboot = true
+		shell.inline =
+			"yum -y install dnf-plugins-core epel-release
+			yum config-manager --set-enabled powertools
+			yum -y install dbus-devel \
+				expect \
+				git \
+				hdf5-devel \
+				http-parser-devel \
+				hwloc \
+				hwloc-devel \
+				infiniband-diags-devel \
+				json-c-devel \
+				libcurl-devel \
+				libjwt-devel \
+				libevent-devel \
+				libibumad-devel \
+				libssh2-devel \
+				libyaml-devel \
+				lua-devel \
+				lz4-devel \
+				man \
+				man2html \
+				mariadb \
+				mariadb-devel \
+				munge \
+				munge-devel \
+				ncurses-devel \
+				numactl-devel \
+				openssl-devel \
+				pam-devel \
+				perf \
+				perl-ExtUtils-MakeMaker \
+				perl-ExtUtils-ParseXS \
+				pmix-devel \
+				python3 \
+				readline-devel \
+				rrdtool-devel \
+				vim \
+				which
+			echo thisismysecretmungekeythatis32bytes > /etc/munge/munge.key
+			chown munge:munge /etc/munge/munge.key
+			chmod 0400 /etc/munge/munge.key
+			systemctl disable httpd firewalld
+			systemctl stop httpd firewalld
+			systemctl enable munge
+			systemctl restart munge
+			echo -e \"192.168.255.10\tdbd\" >>/etc/hosts
+			echo -e \"192.168.255.11\tctld\" >>/etc/hosts
+			echo -e \"192.168.255.12\tctld-backup\" >>/etc/hosts
+			groupadd --gid 500 slurm
+			useradd --uid 500 --gid 500 --shell /sbin/nologin slurm
+			mkdir /var/log/slurm /var/spool/slurm /run/slurm
+			chown slurm:slurm /var/log/slurm /var/spool/slurm /run/slurm
+			echo -e \"d\t/run/slurm\t0755\tslurm\tslurm\t-\t-\" > /etc/tmpfiles.d/slurm.conf"
+	end
 end
