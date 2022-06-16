@@ -66,20 +66,21 @@ Vagrant.configure("2") do |config|
 	config.vm.provision "shell", inline: <<-SHELL
 		yum -y install dnf-plugins-core epel-release
 		yum config-manager --set-enabled powertools
-		yum -y install epel-release \
+		yum -y install dbus-devel \
 			expect \
+			git \
 			hdf5-devel \
 			http-parser-devel \
+			hwloc \
 			hwloc-devel \
+			infiniband-diags-devel \
 			json-c-devel \
 			libcurl-devel \
 			libjwt-devel \
 			libevent-devel \
-			libibmad-devel \
 			libibumad-devel \
 			libssh2-devel \
 			libyaml-devel \
-			dbus-devel \
 			lua-devel \
 			lz4-devel \
 			man \
@@ -92,6 +93,7 @@ Vagrant.configure("2") do |config|
 			numactl-devel \
 			openssl-devel \
 			pam-devel \
+			perf \
 			perl-ExtUtils-MakeMaker \
 			perl-ExtUtils-ParseXS \
 			pmix-devel \
@@ -99,8 +101,7 @@ Vagrant.configure("2") do |config|
 			readline-devel \
 			rrdtool-devel \
 			vim \
-			which \
-			git
+			which
 		echo "thisismysecretmungekeythatis32bytes" > /etc/munge/munge.key
 		chown munge:munge /etc/munge/munge.key
 		chmod 0400 /etc/munge/munge.key
