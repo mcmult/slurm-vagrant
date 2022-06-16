@@ -1,0 +1,94 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+Vagrant.configure("2") do |config|
+	# OS
+	config.vm.box = "generic/centos7"
+
+	# Default hardware setup
+	config.vm.provider :libvirt do |libvirt|
+		libvirt.cpus = 8
+		# Normally specify this.  However, if specifying numa nodes
+		# manually the sum of memory for each numa node will override
+		# this.
+		libvirt.memory = 16384
+		# Specify numa nodes for the VM.
+		libvirt.numa_nodes = [
+			{:cpus => "0-3", :memory => "8192"},
+			{:cpus => "4-7", :memory => "8192"}
+		]
+		# These do not have to be identical to eachother. EG:
+		#libvirt.numa_nodes = [
+		#	{:cpus => "0-3", :memory => "8192"},
+		#	{:cpus => "4-5", :memory => "4096"},
+		#	{:cpus => "6-7", :memory => "4096"}
+		#]
+	end
+
+	# Pull over some useful files
+	config.vm.provision "file", source: "~/.gitconfig", destination: ".gitconfig"
+	config.vm.provision "file", source: "~/.vimrc", destination: ".vimrc"
+	#config.vm.provision "file", source: "~/.emacs", destination: ".emacs"
+
+	# Disable NFS sync at start
+	config.vm.synced_folder '.', '/vagrant', disabled: true
+
+	# node definitions
+	config.vm.define "centos7" do |slurm|
+		slurm.vm.hostname = "centos7"
+	end
+
+	config.vm.provision "shell" do |shell|
+		shell.reboot = true
+		shell.inline =
+			"yum -y upgrade
+			yum -y install epel-release
+			yum -y install dbus-devel \
+				expect \
+				git \
+				hdf5-devel \
+				http-parser-devel \
+				hwloc \
+				hwloc-devel \
+				infiniband-diags-devel \
+				json-c-devel \
+				libcurl-devel \
+				libjwt-devel \
+				libevent-devel \
+				libibumad-devel \
+				libssh2-devel \
+				libyaml-devel \
+				lua-devel \
+				lz4-devel \
+				man \
+				man2html \
+				mariadb \
+				mariadb-devel \
+				munge \
+				munge-devel \
+				ncurses-devel \
+				numactl-devel \
+				openssl-devel \
+				pam-devel \
+				perf \
+				perl-ExtUtils-MakeMaker \
+				perl-ExtUtils-ParseXS \
+				pmix-devel \
+				python3 \
+				readline-devel \
+				rrdtool-devel \
+				vim \
+				which
+			echo thisismysecretmungekeythatis32bytes > /etc/munge/munge.key
+			chown munge:munge /etc/munge/munge.key
+			chmod 0400 /etc/munge/munge.key
+			systemctl disable httpd firewalld
+			systemctl stop httpd firewalld
+			systemctl enable munge
+			systemctl restart munge
+			groupadd --gid 500 slurm
+			useradd --uid 500 --gid 500 --shell /sbin/nologin slurm
+			mkdir /var/log/slurm /var/spool/slurm /run/slurm
+			chown slurm:slurm /var/log/slurm /var/spool/slurm /run/slurm
+			echo -e \"d\t/run/slurm\t0755\tslurm\tslurm\t-\t-\" > /etc/tmpfiles.d/slurm.conf"
+	end
+end
