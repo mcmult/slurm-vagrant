@@ -68,7 +68,7 @@ Vagrant.configure("2") do |config|
 		shell.inline =
 			"yum -y install dnf-plugins-core epel-release
 			yum config-manager --set-enabled powertools
-			yum -y install check \
+			yum -y install check-devel \
 				dbus-devel \
 				dejagnu \
 				expect \
