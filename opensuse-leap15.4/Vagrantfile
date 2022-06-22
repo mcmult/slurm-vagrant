@@ -41,7 +41,9 @@ Vagrant.configure("2") do |config|
 		shell.reboot = true
 		shell.inline =
 			"zypper install -y -t pattern devel_basis
-			zypper install -y dbus-1-devel \
+			zypper install -y check \
+				dbus-1-devel \
+				dejagnu \
 				expect \
 				freeipmi-devel \
 				git \

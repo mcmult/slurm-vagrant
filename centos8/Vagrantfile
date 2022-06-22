@@ -68,7 +68,9 @@ Vagrant.configure("2") do |config|
 		shell.inline =
 			"yum -y install dnf-plugins-core epel-release
 			yum config-manager --set-enabled powertools
-			yum -y install dbus-devel \
+			yum -y install check \
+				dbus-devel \
+				dejagnu \
 				expect \
 				git \
 				hdf5-devel \
