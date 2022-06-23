@@ -95,7 +95,7 @@ Vagrant.configure("2") do |config|
 			systemctl disable apache2
 			systemctl enable munge
 			groupadd --gid 500 slurm
-			useradd --uid 500 --gid 500 --shell /sbin/nologin slurm
+			useradd -r --uid 500 --gid 500 --shell /sbin/nologin slurm
 			mkdir /var/log/slurm /var/spool/slurm /run/slurm
 			chown slurm:slurm /var/log/slurm /var/spool/slurm /run/slurm"
 	end

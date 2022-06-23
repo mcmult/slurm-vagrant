@@ -117,7 +117,7 @@ Vagrant.configure("2") do |config|
 			echo -e \"192.168.255.11\tctld\" >>/etc/hosts
 			echo -e \"192.168.255.12\tctld-backup\" >>/etc/hosts
 			groupadd --gid 500 slurm
-			useradd --uid 500 --gid 500 --shell /sbin/nologin slurm
+			useradd -r --uid 500 --gid 500 --shell /sbin/nologin slurm
 			mkdir /var/log/slurm /var/spool/slurm /run/slurm
 			chown slurm:slurm /var/log/slurm /var/spool/slurm /run/slurm
 			echo -e \"d\t/run/slurm\t0755\tslurm\tslurm\t-\t-\" > /etc/tmpfiles.d/slurm.conf"
