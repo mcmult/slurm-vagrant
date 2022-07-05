@@ -48,6 +48,8 @@ Vagrant.configure("2") do |config|
 				dejagnu \
 				expect \
 				git \
+				glib2-devel \
+				gtk2-devel \
 				hdf5-devel \
 				http-parser-devel \
 				hwloc \
