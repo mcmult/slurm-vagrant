@@ -47,6 +47,7 @@ Vagrant.configure("2") do |config|
 				dbus-devel \
 				dejagnu \
 				expect \
+				gdb \
 				git \
 				glib2-devel \
 				gtk2-devel \
@@ -79,6 +80,7 @@ Vagrant.configure("2") do |config|
 				python3 \
 				readline-devel \
 				rrdtool-devel \
+				valgrind \
 				vim \
 				wget \
 				which

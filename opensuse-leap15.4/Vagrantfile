@@ -46,6 +46,7 @@ Vagrant.configure("2") do |config|
 				dejagnu \
 				expect \
 				freeipmi-devel \
+				gdb \
 				git \
 				glib2-devel \
 				gtk2-devel \
@@ -79,6 +80,7 @@ Vagrant.configure("2") do |config|
 				readline-devel \
 				rpm-build \
 				rrdtool-devel \
+				valgrind \
 				vim \
 				which
 			echo thisismysecretmungekeythatis32bytes > /etc/munge/munge.key

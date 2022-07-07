@@ -73,6 +73,7 @@ Vagrant.configure("2") do |config|
 				dbus-devel \
 				dejagnu \
 				expect \
+				gdb \
 				git \
 				gtk2-devel \
 				glib2-devel \
@@ -107,6 +108,7 @@ Vagrant.configure("2") do |config|
 				python3 \
 				readline-devel \
 				rrdtool-devel \
+				valgrind \
 				vim \
 				which
 			echo thisismysecretmungekeythatis32bytes > /etc/munge/munge.key
