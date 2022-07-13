@@ -96,6 +96,8 @@ Vagrant.configure("2") do |config|
 			systemctl restart munge
 			groupadd --gid 500 slurm
 			useradd -r --uid 500 --gid 500 --shell /sbin/nologin slurm
+			groupadd --gid 501 slurmrest
+			useradd -r --uid 501 --gid 501 --shell /sbin/nologin slurmrest
 			mkdir /var/log/slurm /var/spool/slurm /run/slurm
 			chown slurm:slurm /var/log/slurm /var/spool/slurm /run/slurm
 			echo -e \"d\t/run/slurm\t0755\tslurm\tslurm\t-\t-\" > /etc/tmpfiles.d/slurm.conf"
