@@ -84,6 +84,7 @@ Vagrant.configure("2") do |config|
 				readline-devel \
 				rpm-build \
 				rrdtool-devel \
+				tcpdump \
 				valgrind \
 				vim \
 				which \

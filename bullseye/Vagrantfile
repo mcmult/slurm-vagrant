@@ -91,6 +91,7 @@ Vagrant.configure("2") do |config|
 				numactl \
 				openssh-server \
 				python3 \
+				tcpdump \
 				valgrind \
 				vim \
 				xauth \

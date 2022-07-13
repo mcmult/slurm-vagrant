@@ -97,6 +97,7 @@ Vagrant.configure("2") do |config|
 				python3 \
 				readline-devel \
 				rrdtool-devel \
+				tcpdump \
 				valgrind \
 				vim \
 				which \
