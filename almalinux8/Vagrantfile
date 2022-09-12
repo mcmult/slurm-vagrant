@@ -1,0 +1,97 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+Vagrant.configure("2") do |config|
+	config.vm.box = "almalinux/8"
+	# Default hardware setup
+	config.vm.provider :libvirt do |libvirt|
+		libvirt.cpus = 6
+		libvirt.memory = 8192
+	end
+
+	# Pull over some useful files
+	config.vm.provision "file", source: "~/.gitconfig", destination: ".gitconfig"
+	config.vm.provision "file", source: "~/.vimrc", destination: ".vimrc"
+	#config.vm.provision "file", source: "~/.emacs", destination: ".emacs"
+
+	# Disable NFS sync at start
+	config.vm.synced_folder '.', '/vagrant', disabled: true
+
+	# node definitions
+	config.vm.define "alma8" do |el8|
+		el8.vm.hostname = "alma8"
+		el8.vm.provision "shell", inline: <<-SHELL
+			yum -y install mariadb-server
+			echo -e "[mysqld]\ninnodb_buffer_pool_size=1024M\ninnodb_log_file_size=256M\ninnodb_lock_wait_timeout=900" > /etc/my.cnf.d/slurm.cnf
+			systemctl enable mariadb
+			systemctl start mariadb
+			mysql -e "create user slurm"
+			mysql -e "create database slurm_acct_db"
+			mysql -e "grant all on slurm_acct_db.* to 'slurm'"
+		SHELL
+	end
+
+	config.vm.provision "shell" do |shell|
+		shell.reboot = true
+		shell.inline =
+			"yum -y install dnf-plugins-core epel-release
+			yum config-manager --set-enabled powertools
+			yum groupinstall -y 'Development Tools'
+			yum -y install check-devel \
+				dbus-devel \
+				dejagnu \
+				expect \
+				gdb \
+				git \
+				gtk2-devel \
+				glib2-devel \
+				hdf5-devel \
+				http-parser-devel \
+				hwloc \
+				hwloc-devel \
+				infiniband-diags-devel \
+				json-c-devel \
+				libcurl-devel \
+				libjwt-devel \
+				libevent-devel \
+				libibumad-devel \
+				libssh2-devel \
+				libyaml-devel \
+				lua-devel \
+				lz4-devel \
+				man \
+				man2html \
+				mariadb \
+				mariadb-devel \
+				munge \
+				munge-devel \
+				ncurses-devel \
+				numactl-devel \
+				openssl-devel \
+				pam-devel \
+				perf \
+				perl-ExtUtils-MakeMaker \
+				perl-ExtUtils-ParseXS \
+				pmix-devel \
+				python3 \
+				readline-devel \
+				rrdtool-devel \
+				tcpdump \
+				valgrind \
+				vim \
+				which
+			echo thisismysecretmungekeythatis32bytes > /etc/munge/munge.key
+			chown munge:munge /etc/munge/munge.key
+			chmod 0400 /etc/munge/munge.key
+			systemctl disable httpd firewalld
+			systemctl stop httpd firewalld
+			systemctl enable munge
+			systemctl restart munge
+			groupadd --gid 500 slurm
+			useradd -r --uid 500 --gid 500 --shell /sbin/nologin slurm
+			groupadd --gid 501 slurmrest
+			useradd -r --uid 501 --gid 501 --shell /sbin/nologin slurmrest
+			mkdir /var/log/slurm /var/spool/slurm /run/slurm
+			chown slurm:slurm /var/log/slurm /var/spool/slurm /run/slurm
+			echo -e \"d\t/run/slurm\t0755\tslurm\tslurm\t-\t-\" > /etc/tmpfiles.d/slurm.conf"
+	end
+end
