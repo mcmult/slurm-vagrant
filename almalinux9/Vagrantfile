@@ -51,6 +51,7 @@ Vagrant.configure("2") do |config|
 				dbus-devel \
 				dejagnu \
 				expect \
+				freeipmi-devel \
 				gdb \
 				git \
 				glib2-devel \
