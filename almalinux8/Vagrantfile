@@ -13,6 +13,10 @@ Vagrant.configure("2") do |config|
 	config.vm.provision "file", source: "~/.vimrc", destination: ".vimrc"
 	#config.vm.provision "file", source: "~/.emacs", destination: ".emacs"
 
+	# Enable x11 forwarding
+	config.ssh.forward_agent = true
+	config.ssh.forward_x11 = true
+
 	# Disable NFS sync at start
 	config.vm.synced_folder '.', '/vagrant', disabled: true
 
@@ -79,7 +83,8 @@ Vagrant.configure("2") do |config|
 				tcpdump \
 				valgrind \
 				vim \
-				which
+				which \
+				xorg-x11-xauth
 			echo thisismysecretmungekeythatis32bytes > /etc/munge/munge.key
 			chown munge:munge /etc/munge/munge.key
 			chmod 0400 /etc/munge/munge.key
