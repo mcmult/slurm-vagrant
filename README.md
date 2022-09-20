@@ -28,6 +28,21 @@ veryfy that you are in the group with:
 
     groups
 
+### Validate that virtualization is enabled in the bios.
+
+After everything is set up, make sure you run the following command to validate
+that your host is set up correctly.
+
+    virt-host-validate
+
+Generally speaking, this should return with all "PASS" or "WARN".  If "checking
+hardware virtualization" is not passing, make sure that virtualization is
+enabled in the bios.
+
+Depending on the virsion of libvirt, there may also be issues regarding
+cgroup/v2 detection. See https://gitlab.com/libvirt/libvirt/-/issues/94 for
+more details.
+
 ## Basic usage
 
 After entering a directory with a 'Vagrantfile' you can run a number of commands
