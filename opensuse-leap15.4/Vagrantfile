@@ -69,6 +69,7 @@ Vagrant.configure("2") do |config|
 				libnuma-devel \
 				libyaml-devel \
 				lua53-devel \
+				lua53-luaposix \
 				man \
 				mariadb \
 				mariadb-client \

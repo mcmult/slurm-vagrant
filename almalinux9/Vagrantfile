@@ -71,6 +71,7 @@ Vagrant.configure("2") do |config|
 				libssh2-devel \
 				libyaml-devel \
 				lua-devel \
+				lua-posix \
 				lz4-devel \
 				man \
 				mariadb \

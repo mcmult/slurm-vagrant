@@ -87,6 +87,7 @@ Vagrant.configure("2") do |config|
 				libssl-dev \
 				libyaml-dev \
 				linux-perf \
+				lua-posix \
 				man2html \
 				munge \
 				net-tools \
