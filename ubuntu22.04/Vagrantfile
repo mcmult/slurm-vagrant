@@ -1,0 +1,117 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+Vagrant.configure("2") do |config|
+	# OS
+	config.vm.box = "generic/ubuntu2204"
+
+	# Configure hardware
+	config.vm.provider :libvirt do |libvirt|
+		libvirt.cpus = 8
+		# Normally specify this.  However, if specifying numa nodes
+		# manually the sum of memory for each numa node will override
+		# this.
+		libvirt.memory = 16384
+		# Specify numa nodes for the VM.
+		libvirt.numa_nodes = [
+			{:cpus => "0-3", :memory => "8192"},
+			{:cpus => "4-7", :memory => "8192"}
+		]
+		# These do not have to be identical to eachother. EG:
+		#libvirt.numa_nodes = [
+		#	{:cpus => "0-3", :memory => "8192"},
+		#	{:cpus => "4-5", :memory => "4096"},
+		#	{:cpus => "6-7", :memory => "4096"}
+		#]
+
+		# Set clock to localtime instead of UTC
+		libvirt.clock_offset = 'localtime'
+	end
+
+	# Pull over some useful files
+	config.vm.provision "file", source: "~/.gitconfig", destination: ".gitconfig"
+	config.vm.provision "file", source: "~/.vimrc", destination: ".vimrc"
+	#config.vm.provision "file", source: "~/.emacs", destination: ".emacs"
+
+	# Node definitions
+	config.vm.define "ubuntu2204" do |slurm|
+		slurm.vm.hostname = "ubuntu2204"
+	end
+
+	# Enable x11 forwarding
+	config.ssh.forward_agent = true
+	config.ssh.forward_x11 = true
+
+	# Disable NFS sync at start
+	config.vm.synced_folder '.', '/vagrant', disabled: true
+
+	# Postinstall process
+	# For cgroup/v1 : systemd.unified_cgroup_hierarchy=0
+	# For cgroup/v2 : systemd.unified_cgroup_hierarchy=1
+	config.vm.provision "shell" do |shell|
+		shell.reboot = true
+		shell.inline =
+			"sed -i 's/GRUB_CMDLINE_LINUX=\"/GRUB_CMDLINE_LINUX=\"systemd.unified_cgroup_hierarchy=1 swapaccount=1 /' /etc/default/grub
+			update-grub2
+			apt-get update
+			apt-get dist-upgrade -y
+			apt-get install -y autoconf \
+				build-essential \
+				check \
+				dejagnu \
+				expect \
+				gdb \
+				git \
+				hdf5-tools \
+				htop \
+				hwloc \
+				iputils-ping \
+				libcurl4-gnutls-dev \
+				libdbus-1-dev \
+				libevent-dev \
+				libgtk2.0-dev \
+				libhdf5-dev \
+				libhttp-parser-dev \
+				libhwloc-dev \
+				libibmad-dev \
+				libibumad-dev \
+				libipmi* \
+				libfreeipmi* \
+				libjson-c-dev \
+				libjwt-dev \
+				liblua5.3-dev \
+				liblz4-dev \
+				libmunge-dev \
+				libncurses-dev \
+				libpam0g-dev \
+				librrd-dev \
+				libssl-dev \
+				libyaml-dev \
+				linux-tools-generic \
+				lua-posix \
+				man2html \
+				munge \
+				net-tools \
+				nfs-common \
+				numactl \
+				openssh-server \
+				python3 \
+				tcpdump \
+				valgrind \
+				vim \
+				xauth \
+				default-mysql-client \
+				default-libmysqlclient-dev
+			echo thisismysecretmungekeythatis32bytes > /etc/munge/munge.key
+			chown munge:munge /etc/munge/munge.key
+			chmod 0400 /etc/munge/munge.key
+			systemctl disable apache2
+			systemctl enable munge
+			groupadd --gid 500 slurm
+			useradd -r --uid 500 --gid 500 --shell /sbin/nologin slurm
+			groupadd --gid 501 slurmrest
+			useradd -r --uid 501 --gid 501 --shell /sbin/nologin slurmrest
+			mkdir /var/log/slurm /var/spool/slurm /run/slurm
+			chown slurm:slurm /var/log/slurm /var/spool/slurm /run/slurm"
+	end
+
+end
