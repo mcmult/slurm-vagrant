@@ -113,8 +113,8 @@ Vagrant.configure("2") do |config|
 			mkdir /var/log/slurm /var/spool/slurm /run/slurm
 			chown slurm:slurm /var/log/slurm /var/spool/slurm /run/slurm
 			# Use the DNS server from DHCP
-			sed -i 's/nameservers:/#nameservers:/g' /etc/netplan/01-netcfg.yaml
-			sed -i 's/addresses:/#addresses:/g' /etc/netplan/01-netcfg.yaml
+			sed -i 's/^[[:space:]].*nameservers:/#&/g' /etc/netplan/01-netcfg.yaml
+			sed -i 's/^[[:space:]].*addresses:/#&/g' /etc/netplan/01-netcfg.yaml
 			netplan apply
 			sed -i 's/^DNS=.*/DNS=/' /etc/systemd/resolved.conf
 			sed -i 's/^Cache=yes/Cache=no/' /etc/systemd/resolved.conf
