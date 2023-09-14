@@ -68,12 +68,15 @@ Vagrant.configure("2") do |config|
 				libcurl-devel \
 				libevent-devel \
 				libibumad-devel \
+				libjwt-devel \
+				librdkafka-devel \
 				libssh2-devel \
 				libyaml-devel \
 				lua-devel \
 				lua-posix \
 				lz4-devel \
 				man \
+				man2html \
 				mariadb \
 				mariadb-devel \
 				munge \
@@ -98,8 +101,8 @@ Vagrant.configure("2") do |config|
 			echo thisismysecretmungekeythatis32bytes > /etc/munge/munge.key
 			chown munge:munge /etc/munge/munge.key
 			chmod 0400 /etc/munge/munge.key
-			systemctl disable firewalld
-			systemctl stop firewalld
+			systemctl disable firewalld httpd
+			systemctl stop firewalld httpd
 			systemctl enable munge
 			systemctl restart munge
 			groupadd --gid 500 slurm
