@@ -68,6 +68,7 @@ Vagrant.configure("2") do |config|
 				git \
 				gtk2-devel \
 				glib2-devel \
+				grubby \
 				hdf5-devel \
 				http-parser-devel \
 				hwloc \
@@ -105,6 +106,7 @@ Vagrant.configure("2") do |config|
 				vim \
 				which \
 				xorg-x11-xauth
+			grubby --update-kernel ALL --args selinux=0
 			echo thisismysecretmungekeythatis32bytes > /etc/munge/munge.key
 			chown munge:munge /etc/munge/munge.key
 			chmod 0400 /etc/munge/munge.key
